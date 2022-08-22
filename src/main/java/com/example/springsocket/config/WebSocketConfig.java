@@ -15,7 +15,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // *fallback : 어떤 기능이 약해지거나 제대로 동작하지 않을 때, 이에 대처하는 기능 또는 동작
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/ws")
+        registry.addEndpoint("/ws/chat")
                 .setAllowedOriginPatterns("*")
                 .withSockJS();
     }
@@ -29,4 +29,5 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
        registry.setApplicationDestinationPrefixes("/app");
        registry.enableSimpleBroker("/topic","/queue");
     }
+
 }
