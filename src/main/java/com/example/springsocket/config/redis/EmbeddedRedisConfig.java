@@ -1,6 +1,5 @@
-package com.example.springsocket.config;
+package com.example.springsocket.config.redis;
 
-import io.lettuce.core.dynamic.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import redis.embedded.RedisServer;

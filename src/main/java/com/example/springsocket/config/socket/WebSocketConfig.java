@@ -1,6 +1,8 @@
-package com.example.springsocket.config;
+package com.example.springsocket.config.socket;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
@@ -8,7 +10,10 @@ import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerCo
 
 @Configuration // 해당 클래스가 Bean의 설정을 할 것이라는 것을 나타냄.
 @EnableWebSocketMessageBroker // websocket server를 활성화
+@RequiredArgsConstructor
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
+
+    private final StompHandler stompHandler;
 
     // 1. 클라이언트가 웹 소켓 서버에 연결하는 데 사용할 웹 소켓 엔드포인트.
     // 엔드포인트 구성에 withSockJS 사용 -> 웹 소켓을 지원하지 않는 브라우저에 fallback 옵션 활성화.
@@ -26,8 +31,13 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // queue는 주로 1대1 메시징, topic은 주로 1대 다 메시징일 때 사용.
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-       registry.setApplicationDestinationPrefixes("/app");
-       registry.enableSimpleBroker("/topic","/queue");
+       registry.setApplicationDestinationPrefixes("/app"); // pub
+       registry.enableSimpleBroker("/topic","/queue"); // sub
     }
 
+    // websocket 앞단에서 jwt 토큰을 검증할 수 있도록 stompHander를 interceptor로 추가.
+    @Override
+    public void configureClientInboundChannel(ChannelRegistration registration) {
+        registration.interceptors(stompHandler);
+    }
 }
